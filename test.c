@@ -54,19 +54,26 @@ int main(int argc, char* argv[]) {
 	data = realloc(data, dataLen + 1);
 	data[dataLen] = '\0';
 	
-	FILE* out;
-	out = fopen(outfile, "w");
-	
-	if (out == NULL)
+	if(argc == 4 && strlen(outfile) == 1 && outfile[0] == '-')
 	{
-		printf("Failed to open file");
-		exit(-1);
+		printf("%s\n", data);
 	}
-
-	int done = 0;
-	done = fwrite(data, sizeof(char), dataLen, out);
+	else
+	{
+		FILE* out;
+		out = fopen(outfile, "w");
 	
-	fclose(out);
+		if (out == NULL)
+		{
+			printf("Failed to open file");
+			exit(-1);
+		}
+
+		int done = 0;
+		done = fwrite(data, sizeof(char), dataLen, out);
+	
+		fclose(out);
+	}
 
 	free(data);
 
