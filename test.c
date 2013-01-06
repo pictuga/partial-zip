@@ -9,7 +9,7 @@ void callback(ZipInfo* info, CDFile* file, size_t progress) {
 
 int main(int argc, char* argv[]) {
 	
-	if (3 > argc) {
+	if (argc < 3) {
 		printf("partialzip <zipfile> <extract> [<outfile>]\r\n");
 		return -1;
 	}
