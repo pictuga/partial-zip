@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 	ZipInfo* info = PartialZipInit(fname);
 	if(!info)
 	{
-		printf("Cannot find /tmp/test.zip\n");
+		printf("Cannot find %s\n", fname);
 		return 0;
 	}
 
