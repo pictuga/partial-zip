@@ -4,7 +4,7 @@
 
 void callback(ZipInfo* info, CDFile* file, size_t progress) {
 	int percentDone = progress * 100/file->compressedSize;
-	printf("Getting: %d%%\n", percentDone);
+	fprintf(stderr, "Getting: %d%%\n", percentDone);
 }
 
 int main(int argc, char* argv[]) {
