@@ -9,25 +9,30 @@ void callback(ZipInfo* info, CDFile* file, size_t progress) {
 
 int main(int argc, char* argv[]) {
 	
-	if (argc < 3) {
+	if (argc < 2) {
 		printf("partialzip <zipfile> <extract> [<outfile>]\r\n");
 		return -1;
 	}
 	
 	int len = strlen(argv[0]);
 	char* extract = argv[2], fname[len+7];
-	char* outfile = argv[2];
+	char* outfile;
 	
-	if (argc >= 4)
+	if(argc >= 3)
 	{
-		outfile = argv[3];	
+		outfile = argv[2];
+	
+		if (argc >= 4)
+		{
+			outfile = argv[3];	
+		}
 	}
 	
 	if (strstr(argv[1], "http://") == NULL || strstr(argv[1], "file://") == NULL)
 	{
 		strcpy(fname, "file://");
 	}
-	
+
 	strcpy(fname, argv[1]);
 	
 	ZipInfo* info = PartialZipInit(fname);
@@ -39,43 +44,50 @@ int main(int argc, char* argv[]) {
 
 	PartialZipSetProgressCallback(info, callback);
 
-	CDFile* file = PartialZipFindFile(info, extract);
-	if(!file)
+	if(argc >= 3)
 	{
-		printf("Cannot find %s in %s\n", extract, fname);
-		return 0;
-	}
+		CDFile* file = PartialZipFindFile(info, extract);
+		if(!file)
+		{
+			printf("Cannot find %s in %s\n", extract, fname);
+			return 0;
+		}
 
-	unsigned char* data = PartialZipGetFile(info, file);
-	int dataLen = file->size; 
+		unsigned char* data = PartialZipGetFile(info, file);
+		int dataLen = file->size; 
 
-	PartialZipRelease(info);
+		PartialZipRelease(info);
 
-	data = realloc(data, dataLen + 1);
-	data[dataLen] = '\0';
+		data = realloc(data, dataLen + 1);
+		data[dataLen] = '\0';
 	
-	if(argc == 4 && strlen(outfile) == 1 && outfile[0] == '-')
-	{
-		printf("%s\n", data);
+		if(argc == 4 && strlen(outfile) == 1 && outfile[0] == '-')
+		{
+			printf("%s\n", data);
+		}
+		else
+		{
+			FILE* out;
+			out = fopen(outfile, "w");
+	
+			if (out == NULL)
+			{
+				printf("Failed to open file");
+				exit(-1);
+			}
+
+			int done = 0;
+			done = fwrite(data, sizeof(char), dataLen, out);
+	
+			fclose(out);
+		}
+
+		free(data);
 	}
 	else
 	{
-		FILE* out;
-		out = fopen(outfile, "w");
-	
-		if (out == NULL)
-		{
-			printf("Failed to open file");
-			exit(-1);
-		}
-
-		int done = 0;
-		done = fwrite(data, sizeof(char), dataLen, out);
-	
-		fclose(out);
+		PartialZipListFiles(info);
 	}
-
-	free(data);
 
 	return 0;
 }
