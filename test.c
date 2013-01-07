@@ -28,12 +28,12 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	
-	if (strstr(argv[1], "http://") == NULL || strstr(argv[1], "file://") == NULL)
+	if (strstr(argv[1], "http://") == NULL && strstr(argv[1], "file://") == NULL)
 	{
 		strcpy(fname, "file://");
 	}
 
-	strcpy(fname, argv[1]);
+	strcat(fname, argv[1]);
 	
 	ZipInfo* info = PartialZipInit(fname);
 	if(!info)
