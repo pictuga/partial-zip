@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 	
 			if (out == NULL)
 			{
-				printf("Failed to open file");
+				printf("Failed to open file\n");
 				exit(-1);
 			}
 
