@@ -6,7 +6,7 @@ pkgrel=1
 pkgdesc="Using curl's partial downloading feature to retrieve selected portions of ZIP files"
 arch=(i686 x86_64)
 license=('LGPL')
-depends=(curl)
+depends=(curl zlib)
 makedepends=(cmake)
 url="https://github.com/planetbeing/partial-zip"
 
