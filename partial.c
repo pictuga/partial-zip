@@ -208,6 +208,36 @@ CDFile* PartialZipFindFile(ZipInfo* info, const char* fileName)
 	return NULL;
 }
 
+CDFile** PartialZipFindPattern(ZipInfo* info, const char* pattern, size_t* size)
+{
+	*size = 0;
+	CDFile** out = NULL;
+
+	char* cur = info->centralDirectory;
+	unsigned int i;
+	for(i = 0; i < info->centralDirectoryDesc->CDEntries; i++)
+	{
+		CDFile* candidate = (CDFile*) cur;
+		const char* curFileName = cur + sizeof(CDFile);
+		char* myFileName = (char*) malloc(candidate->lenFileName + 1);
+		memcpy(myFileName, curFileName, candidate->lenFileName);
+		myFileName[candidate->lenFileName] = '\0';
+
+		if(fnmatch(pattern, myFileName, 0) == 0)
+		{
+			out = (CDFile**) realloc(out, (*size + 1) * sizeof(CDFile*));
+			out[*size] = candidate;
+			(*size)++;
+		}
+
+		free(myFileName);
+
+		cur += sizeof(CDFile) + candidate->lenFileName + candidate->lenExtra + candidate->lenComment;
+	}
+	
+	return out;
+}
+
 CDFile* PartialZipListFiles(ZipInfo* info)
 {
 	char* cur = info->centralDirectory;

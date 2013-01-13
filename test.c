@@ -10,12 +10,12 @@ void callback(ZipInfo* info, CDFile* file, size_t progress) {
 int main(int argc, char* argv[]) {
 	
 	if (argc < 2) {
-		printf("partialzip <zipfile> [<extract> [<outfile>]]\r\n");
+		printf("partialzip <zipfile> [<pattern> [<outfile>]]\r\n");
 		return -1;
 	}
 	
 	int len = strlen(argv[0]);
-	char* extract = argv[2], fname[len+7];
+	char* pattern = argv[2], fname[len+7];
 	char* outfile;
 	
 	if(argc >= 3)
@@ -46,43 +46,65 @@ int main(int argc, char* argv[]) {
 
 	if(argc >= 3)
 	{
-		CDFile* file = PartialZipFindFile(info, extract);
-		if(!file)
+		size_t size = 0;
+
+		CDFile** files = PartialZipFindPattern(info, pattern, &size);
+		if(!files)
 		{
-			printf("Cannot find %s in %s\n", extract, fname);
+			printf("Cannot find %s in %s\n", pattern, fname);
 			return 0;
 		}
 
-		unsigned char* data = PartialZipGetFile(info, file);
-		int dataLen = file->size; 
-
-		PartialZipRelease(info);
-
-		data = realloc(data, dataLen + 1);
-		data[dataLen] = '\0';
-	
-		if(argc == 4 && strlen(outfile) == 1 && outfile[0] == '-')
+		unsigned int i;
+		for(i = 0; i < size; i++)
 		{
-			printf("%s\n", data);
-		}
-		else
-		{
-			FILE* out;
-			out = fopen(outfile, "w");
-	
-			if (out == NULL)
+			char* cur = (char*) files[i];
+			char* curFileName = cur + sizeof(CDFile);
+			char* myFileName = (char*) malloc(files[i]->lenFileName + 1);
+			memcpy(myFileName, curFileName, files[i]->lenFileName);
+			myFileName[files[i]->lenFileName] = '\0';
+
+			unsigned char* data = PartialZipGetFile(info, files[i]);
+
+			int dataLen = files[i]->size;
+
+			data = realloc(data, dataLen + 1);
+			data[dataLen] = '\0';
+
+			if(argc == 4 && strlen(outfile) == 1 && outfile[0] == '-')
 			{
-				printf("Failed to open file\n");
-				exit(-1);
+				if(size > 1 && i != 0)
+					printf("\n");
+				if(size > 1)
+					printf("====%s====\n", myFileName);
+				printf("%s\n", data);
+			}
+			else
+			{
+				FILE* out;
+				if(size == 0)
+					out = fopen(outfile, "w");
+				else
+					out = fopen(myFileName, "w");
+		
+				if (out == NULL)
+				{
+					printf("Failed to open file\n");
+					exit(-1);
+				}
+
+				int done = 0;
+				done = fwrite(data, sizeof(char), dataLen, out);
+		
+				fclose(out);
 			}
 
-			int done = 0;
-			done = fwrite(data, sizeof(char), dataLen, out);
-	
-			fclose(out);
+			free(myFileName);
+			free(data);
 		}
-
-		free(data);
+		
+		PartialZipRelease(info);
+		free(files);
 	}
 	else
 	{

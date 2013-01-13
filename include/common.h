@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <sys/types.h>
+#include <fnmatch.h>
 
 #ifdef WIN32
 #define fseeko fseeko64
