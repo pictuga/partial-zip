@@ -36,6 +36,8 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
+	free(fname);
+
 	PartialZipSetProgressCallback(info, callback);
 
 	if(argc >= 3)
@@ -45,7 +47,7 @@ int main(int argc, char* argv[])
 		CDFile** files = PartialZipFindPattern(info, pattern, &size);
 		if(!files)
 		{
-			printf("Cannot find %s in %s\n", pattern, fname);
+			printf("Cannot find %s in file.\n", pattern);
 			return 0;
 		}
 
