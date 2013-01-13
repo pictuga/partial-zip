@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
 			
 					if (out == NULL)
 					{
-						printf("Failed to open file\n");
+						printf("Failed to open local file %s for write.\n", myFileName);
 						exit(-1);
 					}
 
