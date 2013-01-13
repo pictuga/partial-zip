@@ -7,8 +7,8 @@ void callback(ZipInfo* info, CDFile* file, size_t progress) {
 	fprintf(stderr, "Getting: %d%%\n", percentDone);
 }
 
-int main(int argc, char* argv[]) {
-	
+int main(int argc, char* argv[])
+{
 	if (argc < 2) {
 		printf("partialzip <zipfile> [<pattern> [-]]\r\n");
 		return -1;
