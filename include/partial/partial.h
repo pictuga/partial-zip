@@ -72,7 +72,7 @@ extern "C" {
 
 	CDFile** PartialZipFindPattern(ZipInfo* info, const char* pattern, size_t* size);
 
-	CDFile* PartialZipListFiles(ZipInfo* info);
+	CDFile* PartialZipListFiles(ZipInfo* info, const int verbose);
 
 	unsigned char* PartialZipGetFile(ZipInfo* info, CDFile* file);
 

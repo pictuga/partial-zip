@@ -238,7 +238,7 @@ CDFile** PartialZipFindPattern(ZipInfo* info, const char* pattern, size_t* size)
 	return out;
 }
 
-CDFile* PartialZipListFiles(ZipInfo* info)
+CDFile* PartialZipListFiles(ZipInfo* info, const int verbose)
 {
 	char* cur = info->centralDirectory;
 	unsigned int i;
@@ -250,8 +250,11 @@ CDFile* PartialZipListFiles(ZipInfo* info)
 		memcpy(myFileName, curFileName, candidate->lenFileName);
 		myFileName[candidate->lenFileName] = '\0';
 
-		printf("%s: method: %d, compressed size: %d, size: %d\n", myFileName, candidate->method,
+		if(verbose)
+			printf("%s: method: %d, compressed size: %d, size: %d\n", myFileName, candidate->method,
 				candidate->compressedSize, candidate->size);
+		else
+			printf("%s\n", myFileName);
 
 		free(myFileName);
 
