@@ -16,17 +16,6 @@ int main(int argc, char* argv[])
 	
 	int len = strlen(argv[1]);
 	char* pattern = argv[2], fname[len+7];
-	char* outfile;
-	
-	if(argc >= 3)
-	{
-		outfile = argv[2];
-	
-		if (argc >= 4)
-		{
-			outfile = argv[3];	
-		}
-	}
 	
 	if (strstr(argv[1], "http://") == NULL && strstr(argv[1], "file://") == NULL)
 	{
@@ -78,7 +67,7 @@ int main(int argc, char* argv[])
 				data = realloc(data, dataLen + 1);
 				data[dataLen] = '\0';
 
-				if(argc == 4 && strlen(outfile) == 1 && outfile[0] == '-')
+				if(argc == 4 && strlen(argv[3]) == 1 && argv[3][0] == '-')
 				{
 					if(size > 1 && i != 0)
 						printf("\n");
