@@ -10,7 +10,7 @@ void callback(ZipInfo* info, CDFile* file, size_t progress) {
 int main(int argc, char* argv[]) {
 	
 	if (argc < 2) {
-		printf("partialzip <zipfile> [<pattern> [<outfile>]]\r\n");
+		printf("partialzip <zipfile> [<pattern> [-]]\r\n");
 		return -1;
 	}
 	
@@ -89,10 +89,7 @@ int main(int argc, char* argv[]) {
 				else
 				{
 					FILE* out;
-					if(size == 0)
-						out = fopen(outfile, "w");
-					else
-						out = fopen(myFileName, "w");
+					out = fopen(myFileName, "w");
 			
 					if (out == NULL)
 					{
