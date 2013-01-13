@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 	
-	int len = strlen(argv[0]);
+	int len = strlen(argv[1]);
 	char* pattern = argv[2], fname[len+7];
 	char* outfile;
 	
