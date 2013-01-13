@@ -14,12 +14,17 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 	
-	int len = strlen(argv[1]);
-	char* pattern = argv[2], fname[len+7];
+	char* pattern = argv[2];
+	char* fname;
 	
 	if (strstr(argv[1], "http://") == NULL && strstr(argv[1], "file://") == NULL)
 	{
+		fname = malloc( sizeof(char) * (strlen(argv[1]) + 7) );
 		strcpy(fname, "file://");
+	}
+	else
+	{
+		fname = malloc( sizeof(char) * strlen(argv[1]) );
 	}
 
 	strcat(fname, argv[1]);
