@@ -64,43 +64,51 @@ int main(int argc, char* argv[]) {
 			memcpy(myFileName, curFileName, files[i]->lenFileName);
 			myFileName[files[i]->lenFileName] = '\0';
 
-			unsigned char* data = PartialZipGetFile(info, files[i]);
-
-			int dataLen = files[i]->size;
-
-			data = realloc(data, dataLen + 1);
-			data[dataLen] = '\0';
-
-			if(argc == 4 && strlen(outfile) == 1 && outfile[0] == '-')
+			if(myFileName[files[i]->lenFileName - 1] == '/')
 			{
-				if(size > 1 && i != 0)
-					printf("\n");
-				if(size > 1)
-					printf("====%s====\n", myFileName);
-				printf("%s\n", data);
+				//skip for now
+				//FIXME create them in near future
 			}
 			else
 			{
-				FILE* out;
-				if(size == 0)
-					out = fopen(outfile, "w");
-				else
-					out = fopen(myFileName, "w");
-		
-				if (out == NULL)
+				unsigned char* data = PartialZipGetFile(info, files[i]);
+
+				int dataLen = files[i]->size;
+
+				data = realloc(data, dataLen + 1);
+				data[dataLen] = '\0';
+
+				if(argc == 4 && strlen(outfile) == 1 && outfile[0] == '-')
 				{
-					printf("Failed to open file\n");
-					exit(-1);
+					if(size > 1 && i != 0)
+						printf("\n");
+					if(size > 1)
+						printf("====%s====\n", myFileName);
+					printf("%s\n", data);
+				}
+				else
+				{
+					FILE* out;
+					if(size == 0)
+						out = fopen(outfile, "w");
+					else
+						out = fopen(myFileName, "w");
+			
+					if (out == NULL)
+					{
+						printf("Failed to open file\n");
+						exit(-1);
+					}
+
+					int done = 0;
+					done = fwrite(data, sizeof(char), dataLen, out);
+			
+					fclose(out);
 				}
 
-				int done = 0;
-				done = fwrite(data, sizeof(char), dataLen, out);
-		
-				fclose(out);
+				free(myFileName);
+				free(data);
 			}
-
-			free(myFileName);
-			free(data);
 		}
 		
 		PartialZipRelease(info);
