@@ -1,6 +1,14 @@
 #include <stdio.h>
+#include <sys/stat.h>
 #include "common.h"
 #include "partial/partial.h"
+
+int isDir(const char* dir)
+{
+	struct stat s;
+	stat(dir, &s);
+	return (s.st_mode & S_IFDIR);
+}
 
 void callback(ZipInfo* info, CDFile* file, size_t progress) {
 	int percentDone = progress * 100/file->compressedSize;
@@ -62,11 +70,15 @@ int main(int argc, char* argv[])
 
 			if(myFileName[files[i]->lenFileName - 1] == '/')
 			{
-				//skip for now
-				//FIXME create them in near future
+				if(!isDir(myFileName))
+				{
+					mkdir(myFileName, 0755);
+				}
 			}
 			else
 			{
+				//FIXME create parent dirs
+
 				unsigned char* data = PartialZipGetFile(info, files[i]);
 
 				int dataLen = files[i]->size;
