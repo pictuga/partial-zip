@@ -13,7 +13,7 @@
 char* HumanReadableFileSize(const int size)
 {
 	if(!size)
-		return "00.0 B";
+		return "0";
 	char* out = malloc(sizeof(char)*10);
 	char formats[][4] = {"B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"};
 	int exp = log(size)/log(1024.);
@@ -268,7 +268,7 @@ CDFile* PartialZipListFiles(ZipInfo* info, const int verbose)
 		else if(verbose ==2)
 		{
 			char* hsize = HumanReadableFileSize(candidate->size);
-			printf("[%s]\t%s\n", hsize, myFileName);
+			printf("%-9s  %s\n", hsize, myFileName);
 			if(candidate->size)
 				free(hsize);
 		}
