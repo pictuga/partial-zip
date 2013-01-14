@@ -121,7 +121,7 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		PartialZipListFiles(info, 0);
+		PartialZipListFiles(info, 2);
 	}
 
 	return 0;

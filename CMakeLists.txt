@@ -24,6 +24,10 @@ IF(BUILD_PARTIAL)
 		add_definitions(-DCURL_STATICLIB)
 	ENDIF(WIN32)
 
+	IF(UNIX)
+		link_libraries(m)
+	ENDIF(UNIX)
+
 	add_library(partial partial.c)
 	target_link_libraries(partial ${CURL_LIBRARIES} ${ZLIB_LIBRARIES})
 

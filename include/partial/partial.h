@@ -76,6 +76,8 @@ extern "C" {
 
 	unsigned char* PartialZipGetFile(ZipInfo* info, CDFile* file);
 
+	char* HumanReadableFileSize(const int size);
+
 	void PartialZipRelease(ZipInfo* info);
 	
 	void PartialZipSetProgressCallback(ZipInfo* info, PartialZipProgressCallback progressCallback);

@@ -5,9 +5,21 @@
 #include <inttypes.h>
 #include <zlib.h>
 #include <libgen.h>
+#include <math.h>
 
 #include "common.h"
 #include "partial/partial.h"
+
+char* HumanReadableFileSize(const int size)
+{
+	if(!size)
+		return "00.0 B";
+	char* out = malloc(sizeof(char)*10);
+	char formats[][4] = {"B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"};
+	int exp = log(size)/log(1024.);
+	sprintf(out, "%.1f %s", ((double)size / pow(1024., (double)exp)), formats[exp]);
+	return out;
+}
 
 static size_t dummyReceive(void* data, size_t size, size_t nmemb, void* info) {
 	return size * nmemb;
@@ -250,9 +262,16 @@ CDFile* PartialZipListFiles(ZipInfo* info, const int verbose)
 		memcpy(myFileName, curFileName, candidate->lenFileName);
 		myFileName[candidate->lenFileName] = '\0';
 
-		if(verbose)
+		if(verbose == 1)
 			printf("%s: method: %d, compressed size: %d, size: %d\n", myFileName, candidate->method,
 				candidate->compressedSize, candidate->size);
+		else if(verbose ==2)
+		{
+			char* hsize = HumanReadableFileSize(candidate->size);
+			printf("[%s]\t%s\n", hsize, myFileName);
+			if(candidate->size)
+				free(hsize);
+		}
 		else
 			printf("%s\n", myFileName);
 
