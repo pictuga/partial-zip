@@ -68,52 +68,45 @@ int main(int argc, char* argv[])
 			memcpy(myFileName, curFileName, files[i]->lenFileName);
 			myFileName[files[i]->lenFileName] = '\0';
 
-			if(myFileName[files[i]->lenFileName - 1] == '/')
+			//FIXME create parent dirs
+
+			unsigned char* data = PartialZipGetFile(info, files[i]);
+
+			int dataLen = files[i]->size;
+
+			data = realloc(data, dataLen + 1);
+			data[dataLen] = '\0';
+
+			if(argc == 4 && strlen(argv[3]) == 1 && argv[3][0] == '-')
 			{
-				if(!isDir(myFileName))
-				{
-					mkdir(myFileName, 0755);
-				}
+				if(size > 1 && i != 0)
+					printf("\n");
+				if(size > 1)
+					printf("====%s====\n", myFileName);
+				printf("%s\n", data);
 			}
 			else
 			{
-				//FIXME create parent dirs
+				if(myFileName[files[i]->lenFileName - 1] == '/')
+					continue;
 
-				unsigned char* data = PartialZipGetFile(info, files[i]);
-
-				int dataLen = files[i]->size;
-
-				data = realloc(data, dataLen + 1);
-				data[dataLen] = '\0';
-
-				if(argc == 4 && strlen(argv[3]) == 1 && argv[3][0] == '-')
+				FILE* out;
+				out = fopen(myFileName, "w");
+		
+				if (out == NULL)
 				{
-					if(size > 1 && i != 0)
-						printf("\n");
-					if(size > 1)
-						printf("====%s====\n", myFileName);
-					printf("%s\n", data);
-				}
-				else
-				{
-					FILE* out;
-					out = fopen(myFileName, "w");
-			
-					if (out == NULL)
-					{
-						printf("Failed to open local file %s for write.\n", myFileName);
-						exit(-1);
-					}
-
-					int done = 0;
-					done = fwrite(data, sizeof(char), dataLen, out);
-			
-					fclose(out);
+					printf("Failed to open local file %s for write.\n", myFileName);
+					exit(-1);
 				}
 
-				free(myFileName);
-				free(data);
+				int done = 0;
+				done = fwrite(data, sizeof(char), dataLen, out);
+		
+				fclose(out);
 			}
+
+			free(myFileName);
+			free(data);
 		}
 		
 		PartialZipRelease(info);
