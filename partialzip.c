@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 	char* pattern = argv[2];
 	char* fname;
 	
-	if (strstr(argv[1], "http://") == NULL && strstr(argv[1], "file://") == NULL)
+	if (strstr(argv[1], "http://") == NULL && strstr(argv[1], "https://") == NULL && strstr(argv[1], "file://") == NULL)
 	{
 		fname = malloc( sizeof(char) * (strlen(argv[1]) + 7) );
 		strcpy(fname, "file://");
