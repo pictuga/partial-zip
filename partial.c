@@ -103,9 +103,7 @@ ZipInfo* PartialZipInit(const char* url)
 
 	if(strncmp(info->url, "file://", 7) == 0)
 	{
-		char path[1024];
-		strcpy(path, info->url + 7);
-		char* filePath = (char*) curl_easy_unescape(info->hIPSW, path, 0,  NULL);
+		char* filePath = (char*) curl_easy_unescape(info->hIPSW, info->url + 7, 0,  NULL);
 		FILE* f = fopen(filePath, "rb");
 		if(!f)
 		{
