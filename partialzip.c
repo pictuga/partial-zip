@@ -12,7 +12,16 @@ int isDir(const char* dir)
 
 void callback(ZipInfo* info, CDFile* file, size_t progress) {
 	int percentDone = progress * 100/file->compressedSize;
-	fprintf(stderr, "Getting: %d%%\n", percentDone);
+	if(isatty(fileno(stdout)))
+	{
+		fprintf(stderr, "\r");
+		if(percentDone < 100)
+			fprintf(stderr, "Getting:%3d%%", percentDone);
+	}
+	else
+	{
+		fprintf(stderr, "Getting: %d%%\n", percentDone);
+	}
 }
 
 int main(int argc, char* argv[])
