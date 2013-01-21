@@ -109,13 +109,13 @@ int main(int argc, char* argv[])
 				if (out == NULL)
 				{
 					printf("Failed to open local file %s for write.\n", myFileName);
-					exit(-1);
+					continue;
 				}
 
-				int done = 0;
-				done = fwrite(data, sizeof(char), dataLen, out);
-		
+				fwrite(data, sizeof(char), dataLen, out);
 				fclose(out);
+
+				printf("File %s saved.\n", myFileName);
 			}
 
 			free(myFileName);
