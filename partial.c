@@ -97,6 +97,7 @@ ZipInfo* PartialZipInit(const char* url)
 	info->hCurl = curl_easy_init();
 
 	curl_easy_setopt(info->hCurl, CURLOPT_URL, info->url);
+	curl_easy_setopt(info->hCurl, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_easy_setopt(info->hCurl, CURLOPT_FOLLOWLOCATION, 1);
 	curl_easy_setopt(info->hCurl, CURLOPT_NOBODY, 1);
 	curl_easy_setopt(info->hCurl, CURLOPT_WRITEFUNCTION, dummyReceive);
@@ -294,6 +295,7 @@ unsigned char* PartialZipGetFile(ZipInfo* info, CDFile* file)
 	void* pFileHeader[] = {pLocalHeader, NULL, NULL, NULL}; 
 
 	curl_easy_setopt(info->hCurl, CURLOPT_URL, info->url);
+	curl_easy_setopt(info->hCurl, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_easy_setopt(info->hCurl, CURLOPT_FOLLOWLOCATION, 1);
 	curl_easy_setopt(info->hCurl, CURLOPT_WRITEFUNCTION, receiveData);
 	curl_easy_setopt(info->hCurl, CURLOPT_WRITEDATA, &pFileHeader);
