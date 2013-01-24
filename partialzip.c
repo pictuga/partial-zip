@@ -10,6 +10,21 @@ int isDir(const char* dir)
 	return (s.st_mode & S_IFDIR);
 }
 
+int mkpath(char* path)
+{
+	char* match = strchr(path, '/');
+
+	while(match != NULL)
+	{
+		*match = '\0';
+		mkdir(path, 0755);
+		*match = '/';
+		match = strchr(match+1, '/');
+	}
+
+	return 1;
+}
+
 void callback(ZipInfo* info, CDFile* file, size_t progress) {
 	int percentDone = progress * 100/file->compressedSize;
 	if(isatty(fileno(stdout)))
@@ -101,9 +116,14 @@ int main(int argc, char* argv[])
 				FILE* out;
 
 				if((size == 1 || (argc == 4 && strlen(argv[3]) == 1 && argv[3][0] == '.')) && strchr(myFileName, '/') != NULL)
+				{
 					out = fopen(strrchr(myFileName, '/')+1, "w");
+				}
 				else
+				{
+					mkpath(myFileName);
 					out = fopen(myFileName, "w");
+				}
 		
 				if (out == NULL)
 				{
