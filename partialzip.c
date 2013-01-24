@@ -77,7 +77,8 @@ int main(int argc, char* argv[])
 			memcpy(myFileName, curFileName, files[i]->lenFileName);
 			myFileName[files[i]->lenFileName] = '\0';
 
-			//FIXME create parent dirs
+			if(myFileName[files[i]->lenFileName - 1] == '/')
+				continue;
 
 			unsigned char* data = PartialZipGetFile(info, files[i]);
 
@@ -96,8 +97,6 @@ int main(int argc, char* argv[])
 			}
 			else
 			{
-				if(myFileName[files[i]->lenFileName - 1] == '/')
-					continue;
 
 				FILE* out;
 
